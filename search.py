@@ -103,11 +103,11 @@ def graph_search(problem, fringe):
     while fringe:
         node = fringe.pop()
         if problem.goal_test(node.state):
-            return node
+            return node, len(closed)  # Devuelve el nodo solución y el número de nodos cerrados
         if node.state not in closed:
             closed[node.state] = True
             fringe.extend(node.expand(problem))
-    return None
+    return None, len(closed)  # Devuelve None si no se encuentra solución y el número de nodos cerrados
 
 
 def breadth_first_graph_search(problem):
