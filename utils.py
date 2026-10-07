@@ -1,3 +1,15 @@
+import copy
+import math
+import operator
+import os
+import random
+import sys
+from functools import reduce
+
+abstract = NotImplemented
+
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 #______________________________________________________________________________
 # Simple Data Structures: infinity, Dict, Struct

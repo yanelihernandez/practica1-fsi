@@ -94,10 +94,10 @@ class Node:
 # ______________________________________________________________________________
 ## Uninformed Search algorithms
 
-def graph_search(problem, fringe):
-    """Search through the successors of a problem to find a goal.
-    The argument fringe should be an empty queue.
-    If two paths reach a state, only use the best one. [Fig. 3.18]"""
+"""def graph_search(problem, fringe):
+    # Search through the successors of a problem to find a goal.
+    # The argument fringe should be an empty queue.
+    # If two paths reach a state, only use the best one. [Fig. 3.18]
     closed = {}
     fringe.append(Node(problem.initial))
     while fringe:
@@ -108,6 +108,21 @@ def graph_search(problem, fringe):
             closed[node.state] = True
             fringe.extend(node.expand(problem))
     return None, len(closed)  # Devuelve None si no se encuentra solución y el número de nodos cerrados
+"""
+
+def graph_search(problem, fringe):
+    closed = {}
+    fringe.append(Node(problem.initial))
+    expanded = 0
+    while fringe:
+        node = fringe.pop()
+        if problem.goal_test(node.state):
+            return node, expanded
+        if node.state not in closed:
+            closed[node.state] = True
+            expanded += 1
+            fringe.extend(node.expand(problem))
+    return None, expanded
 
 
 def breadth_first_graph_search(problem):
@@ -122,6 +137,10 @@ def depth_first_graph_search(problem):
 def branch_and_bound_search(problem):
     """ Busca primero el nodo con menor coste acumuado.  """
     return graph_search(problem, PriorityQueue(coste=lambda node: node.path_cost))
+
+def branch_and_bound_subestimation_search(problem):
+    """Busca primero el nodo con menor f(n) = g(n) + h(n)."""
+    return graph_search(problem, PriorityQueue(coste=lambda node: node.path_cost + problem.h(node)))
 
 # _____________________________________________________________________________
 # The remainder of this file implements examples for the search algorithms.
