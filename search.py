@@ -125,6 +125,11 @@ def branch_and_bound_graph_search(problem):
     ordena la lista abierta por el coste acumulado g(n) = node.path_cost."""
     return graph_search(problem, PriorityQueue(lambda node: node.path_cost))
 
+def branch_and_bound_subestimation_graph_search(problem):
+    """Busqueda de Ramificacion y Acotacion con Subestimacion (A*):
+    ordena la lista abierta por f(n) = g(n) + h(n)."""
+    return graph_search(problem, PriorityQueue(lambda node: node.path_cost + problem.h(node)))
+
 
 
 # _____________________________________________________________________________
