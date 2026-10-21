@@ -1,3 +1,4 @@
+import math
 
 #______________________________________________________________________________
 # Simple Data Structures: infinity, Dict, Struct
