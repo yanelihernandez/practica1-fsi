@@ -113,16 +113,19 @@ class Node:
 def graph_search(problem, fringe):
     closed = {}
     fringe.append(Node(problem.initial))
-    expanded = 0
+    generated = 1
+    visited = 0
     while fringe:
         node = fringe.pop()
+        visited += 1
         if problem.goal_test(node.state):
-            return node, expanded
+            return node, generated, visited
         if node.state not in closed:
             closed[node.state] = True
-            expanded += 1
-            fringe.extend(node.expand(problem))
-    return None, expanded
+            children = node.expand(problem)
+            generated += len(children)
+            fringe.extend(children)
+    return None, generated, visited
 
 
 def breadth_first_graph_search(problem):

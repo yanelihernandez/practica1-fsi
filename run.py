@@ -31,18 +31,19 @@ print("=" * 70)
 print("PRÁCTICA 1 - PARTE 1: Comparativa No Informada")
 print("=" * 70)
 
-resultado_bfs, nodos_bfs = search.breadth_first_graph_search(ab)
-print("BFS:", resultado_bfs.path(), f"| Coste: {resultado_bfs.path_cost} | Nodos expandidos: {nodos_bfs}")
+resultado_bfs, generated_bfs, visited_bfs = search.breadth_first_graph_search(ab)
+print("BFS:", resultado_bfs.path(), f"| Coste: {resultado_bfs.path_cost} | Generados: {generated_bfs} | Visitados: {visited_bfs}")
 
-resultado_dfs, nodos_dfs = search.depth_first_graph_search(ab)
-print("DFS:", resultado_dfs.path(), f"| Coste: {resultado_dfs.path_cost} | Nodos expandidos: {nodos_dfs}")
+resultado_dfs, generated_dfs, visited_dfs = search.depth_first_graph_search(ab)
+print("DFS:", resultado_dfs.path(), f"| Coste: {resultado_dfs.path_cost} | Generados: {generated_dfs} | Visitados: {visited_dfs}")
 
-resultado_bnb, nodos_bnb = search.branch_and_bound_search(ab)
-print("BnB:", resultado_bnb.path(), f"| Coste: {resultado_bnb.path_cost} | Nodos expandidos: {nodos_bnb}")
+resultado_bnb, generated_bnb, visited_bnb = search.branch_and_bound_search(ab)
+print("BnB:", resultado_bnb.path(), f"| Coste: {resultado_bnb.path_cost} | Generados: {generated_bnb} | Visitados: {visited_bnb}")
+
 
 print("\n" + "=" * 70)
 print("PRÁCTICA 1 - PARTE 2: Ramificación y Acotación con Subestimación")
 print("=" * 70)
 
-resultado_bnb_sub, nodos_bnb_sub = search.branch_and_bound_subestimation_search(ab)
-print("BnB con Subestimación (A*):", resultado_bnb_sub.path(), f"| Coste: {resultado_bnb_sub.path_cost} | Nodos expandidos: {nodos_bnb_sub}")
+resultado_bnb_sub, generated_bnb_sub, visited_bnb_sub = search.branch_and_bound_subestimation_search(ab)
+print("BnB con Subestimación (A*):", resultado_bnb_sub.path(), f"| Coste: {resultado_bnb_sub.path_cost} | Generados: {generated_bnb_sub} | Visitados: {visited_bnb_sub}")
