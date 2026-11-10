@@ -1,4 +1,5 @@
 # run.py
+import time
 import search
 
 casos_evaluacion = [
@@ -16,22 +17,25 @@ algoritmos = [
     ("Ramificación y Acotación con subestimación", search.branch_and_bound_subestimation_graph_search)
 ]
 
-print("=" * 100)
-print("EVALUACIÓN Y GENERACIÓN DE RESULTADOS PARA LA TABLA DE RUMANÍA")
-print("=" * 100)
+print("=" * 105)
+print("EVALUACIÓN EXPERIMENTAL: MÉTRICAS Y TIEMPOS DE EJECUCIÓN")
+print("=" * 105)
 
 for num_id, nom_orig, cod_orig, nom_dest, cod_dest in casos_evaluacion:
     print(f"\nID: {num_id} | Trayectoria: {nom_orig} ({cod_orig}) -> {nom_dest} ({cod_dest})")
-    print("-" * 100)
+    print("-" * 105)
     
     problema = search.GPSProblem(cod_orig, cod_dest, search.romania)
     
     for nombre_alg, func in algoritmos:
+        t_inicio = time.perf_counter()
         nodo, gen, vis, exp = func(problema)
+        t_fin = time.perf_counter()
+        
+        tiempo_ms = (t_fin - t_inicio) * 1000
         costo = nodo.path_cost if nodo else 0
         ruta_str = str(nodo.path()) if nodo else "[]"
         
         print(f"[{nombre_alg}]")
-        # Formato exacto para copiar y pegar en la tabla .docx
-        print(f"Generados: {gen} | Visitados: {vis} | Costo total: {costo} | Expandidos: {exp}")
+        print(f"Generados: {gen} | Visitados: {vis} | Costo total: {costo} | Tiempo: {tiempo_ms:.4f} ms (Expandidos: {exp})")
         print(f"Ruta: {ruta_str}\n")
