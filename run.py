@@ -1,87 +1,37 @@
-import time
+# run.py
 import search
 
-def medir_algoritmo(nombre, funcion_busqueda, problema):
-    """
-    Ejecuta un algoritmo de busqueda midiendo su tiempo de ejecucion en milisegundos,
-    coste de la ruta, nodos expandidos y camino obtenido.
-    """
-    t_inicio = time.perf_counter()
-    nodo_solucion, expandidos = funcion_busqueda(problema)
-    t_fin = time.perf_counter()
+casos_evaluacion = [
+    (1, 'Arad', 'A', 'Bucharest', 'B'),
+    (2, 'Oradea', 'O', 'Eforie', 'E'),
+    (3, 'Giurgiu', 'G', 'Zerind', 'Z'),
+    (4, 'Neamt', 'N', 'Dobreta', 'D'),
+    (5, 'Mehadia', 'M', 'Fagaras', 'F')
+]
+
+algoritmos = [
+    ("Amplitud", search.breadth_first_graph_search),
+    ("Profundidad", search.depth_first_graph_search),
+    ("Ramificación y Acotación", search.branch_and_bound_graph_search),
+    ("Ramificación y Acotación con subestimación", search.branch_and_bound_subestimation_graph_search)
+]
+
+print("=" * 100)
+print("EVALUACIÓN Y GENERACIÓN DE RESULTADOS PARA LA TABLA DE RUMANÍA")
+print("=" * 100)
+
+for num_id, nom_orig, cod_orig, nom_dest, cod_dest in casos_evaluacion:
+    print(f"\nID: {num_id} | Trayectoria: {nom_orig} ({cod_orig}) -> {nom_dest} ({cod_dest})")
+    print("-" * 100)
     
-    tiempo_ms = (t_fin - t_inicio) * 1000  # Convertimos a milisegundos
+    problema = search.GPSProblem(cod_orig, cod_dest, search.romania)
     
-    if nodo_solucion:
-        # Reconstruimos el camino invirtiendo la lista (origen -> destino)
-        camino = [n.state for n in nodo_solucion.path()]
-        camino.reverse()
-        coste = nodo_solucion.path_cost
-    else:
-        camino = []
-        coste = float('inf')
+    for nombre_alg, func in algoritmos:
+        nodo, gen, vis, exp = func(problema)
+        costo = nodo.path_cost if nodo else 0
+        ruta_str = str(nodo.path()) if nodo else "[]"
         
-    return {
-        "nombre": nombre,
-        "coste": coste,
-        "expandidos": expandidos,
-        "tiempo_ms": tiempo_ms,
-        "camino": camino
-    }
-
-def evaluar_trayectoria(origen, destino):
-    print("=" * 115)
-    print(f"PROBLEMA EVALUADO: Ruta de '{origen}' a '{destino}'")
-    print("=" * 115)
-    
-    problema = search.GPSProblem(origen, destino, search.romania)
-    
-    algoritmos = [
-        ("Primero en Anchura (BFS)", search.breadth_first_graph_search),
-        ("Primero en Profundidad (DFS)", search.depth_first_graph_search),
-        ("Ramif. y Acotación (RyA)", search.branch_and_bound_graph_search),
-        ("RyA con Subestimación (A*)", search.branch_and_bound_subestimation_graph_search)
-    ]
-    
-    resultados = []
-    for nombre, fn in algoritmos:
-        res = medir_algoritmo(nombre, fn, problema)
-        resultados.append(res)
-        
-    # Cabecera de la tabla comparativa
-    print(f"{'Algoritmo':<30} | {'Coste':<6} | {'Expandidos':<10} | {'Tiempo (ms)':<12} | {'Camino Solución'}")
-    print("-" * 115)
-    
-    for r in resultados:
-        camino_str = " -> ".join(r["camino"])
-        print(f"{r['nombre']:<30} | {r['coste']:<6} | {r['expandidos']:<10} | {r['tiempo_ms']:<12.4f} | {camino_str}")
-        
-    print()
-    
-    # Análisis de eficiencia RyA vs RyA con Subestimación
-    rya = resultados[2]
-    ryas = resultados[3]
-    ahorro_nodos = rya['expandidos'] - ryas['expandidos']
-    pct_ahorro = (ahorro_nodos / rya['expandidos'] * 100) if rya['expandidos'] > 0 else 0
-    
-    print(f">> Ahorro por Heurística (RyA vs RyA con Subestimación):")
-    print(f"   * Nodos no expandidos: {ahorro_nodos} (-{pct_ahorro:.1f}%)")
-    print(f"   * Optimalidad comprobada: {'Sí (coste idéntico)' if rya['coste'] == ryas['coste'] else 'No'}")
-    print()
-
-
-if __name__ == '__main__':
-    # Batería de pruebas representativas en el mapa de Rumanía
-    rutas_prueba = [
-        ('A', 'B'),  # Arad -> Bucarest (Caso estándar de la asignatura)
-        ('O', 'E'),  # Oradea -> Eforie (Travesía completa de noroeste a sureste)
-        ('T', 'B'),  # Timisoara -> Bucarest (Ruta suroeste)
-        ('D', 'N')   # Dobreta -> Neamt (Ruta sur a noreste)
-    ]
-    
-    for origen, destino in rutas_prueba:
-        evaluar_trayectoria(origen, destino)
-
-# Result:
-# [<Node B>, <Node P>, <Node R>, <Node S>, <Node A>] : 101 + 97 + 80 + 140 = 418
-# [<Node B>, <Node F>, <Node S>, <Node A>] : 211 + 99 + 140 = 450
+        print(f"[{nombre_alg}]")
+        # Formato exacto para copiar y pegar en la tabla .docx
+        print(f"Generados: {gen} | Visitados: {vis} | Costo total: {costo} | Expandidos: {exp}")
+        print(f"Ruta: {ruta_str}\n")

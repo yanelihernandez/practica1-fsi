@@ -99,16 +99,24 @@ def graph_search(problem, fringe):
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
     closed = {}
     fringe.append(Node(problem.initial))
-    expanded_nodes = 0
+    generated = 1
+    visited = 0
+
     while fringe:
         node = fringe.pop()
+        visited += 1
+
         if problem.goal_test(node.state):
-            return node, expanded_nodes
+            # len(closed) son exactamente los nodos expandidos
+            return node, generated, visited, len(closed)
+
         if node.state not in closed:
             closed[node.state] = True
-            expanded_nodes += 1
-            fringe.extend(node.expand(problem))
-    return None, expanded_nodes
+            children = node.expand(problem)
+            generated += len(children)
+            fringe.extend(children)
+
+    return None, generated, visited, len(closed)
 
 
 def breadth_first_graph_search(problem):
